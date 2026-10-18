@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>hang on grasshopper!</title>
+<style>
+:root{--ink:#2b1b3d;--pink:#ff5fa2;--lime:#8dff3a;--sun:#ffe14d}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{min-height:100vh;background-color:#fff4c9;background-image:radial-gradient(circle at 15% 8%,#ffe0f0 0 20%,transparent 21%),radial-gradient(circle at 88% 92%,#d9fff0 0 24%,transparent 25%);font-family:"Baloo 2","Fredoka","Nunito","Chalkboard SE","Comic Sans MS",ui-rounded,system-ui,sans-serif;color:var(--ink);display:flex;justify-content:center;padding:18px 14px 40px}
+.wrap{width:100%;max-width:440px;text-align:center}
+h1{font-size:clamp(30px,9.5vw,46px);line-height:1;margin:6px 0 18px;color:var(--lime);transform:rotate(-2deg);letter-spacing:.5px;text-shadow:3px 3px 0 var(--ink),-2px -2px 0 var(--ink),2px -2px 0 var(--ink),-2px 2px 0 var(--ink),0 4px 0 var(--ink)}
+.stage{position:relative;border:5px solid var(--ink);border-radius:34px;box-shadow:0 8px 0 var(--ink);overflow:hidden;background:#8fe3ff}
+.scene{display:block;width:100%;height:auto}
+.badge{position:absolute;top:10px;left:10px;z-index:3;width:84px;height:84px;border-radius:50%;background:var(--sun);border:4px solid var(--ink);box-shadow:0 4px 0 var(--ink);transform:rotate(-8deg);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.badge small{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.5px}
+.badge b{font-size:34px;font-weight:900}
+.big{width:100%;margin-top:24px;font:inherit;font-weight:900;font-size:clamp(20px,6vw,26px);padding:16px 18px;border:5px solid var(--ink);border-radius:999px;background:var(--pink);color:#fff;text-shadow:2px 2px 0 var(--ink);box-shadow:0 7px 0 var(--ink);cursor:pointer;transition:transform .08s,box-shadow .08s}
+.big:not(:disabled):active{transform:translateY(6px);box-shadow:0 1px 0 var(--ink)}
+.big:not(:disabled):hover{filter:brightness(1.06)}
+.big.done{background:#b9f5c9;color:var(--ink);text-shadow:none;cursor:default}
+.big.revive{background:#ffd23f;color:var(--ink);text-shadow:none}
+.note{font-weight:800;font-size:17px;margin:18px 0 4px}
+.last{font-size:14px;font-weight:700;opacity:.7;min-height:20px}
+.who{margin-top:12px}
+.who input{font:inherit;font-weight:700;text-align:center;width:70%;padding:8px 12px;border:3px solid var(--ink);border-radius:999px;background:#fff;color:var(--ink)}
+.rules{margin-top:16px;font-size:12.5px;font-weight:700;opacity:.55;line-height:1.35}
+.pf{position:absolute;z-index:4;font-size:24px;pointer-events:none;animation:rise 1.5s ease-out forwards}
+@keyframes rise{from{opacity:1;transform:translateY(0) scale(.6)}to{opacity:0;transform:translateY(-150px) scale(1.4) rotate(25deg)}}
+.swing{transform-origin:0 0;animation:swing 2.6s ease-in-out infinite}
+@keyframes swing{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
+.kick{transform-origin:0 112px;animation:kick 1.4s ease-in-out infinite alternate}
+@keyframes kick{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+.antL,.antR{transform-origin:0 0;animation:ant 1.3s ease-in-out infinite}
+.antR{animation-duration:1.7s;animation-delay:-.5s}
+@keyframes ant{0%,100%{transform:rotate(6deg)}30%{transform:rotate(28deg)}55%{transform:rotate(-3deg)}80%{transform:rotate(20deg)}}
+.antd{transform-origin:0 0;animation:antd 3s ease-in-out infinite}
+@keyframes antd{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(8deg)}}
+.blink{transform-origin:0 42px;animation:blink 4s infinite}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.drift{animation:drift 7s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translateX(18px)}}
+.wind{stroke-dasharray:36 140;animation:wind 2.2s linear infinite}
+@keyframes wind{to{stroke-dashoffset:-176}}
+.bob{animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-14px)}}
+.halo{transform-origin:0 -14px;animation:halo 2.4s ease-in-out infinite}
+@keyframes halo{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg) translateY(-3px)}}
+.flapL{transform-origin:-30px 100px;animation:flap .9s ease-in-out infinite alternate}
+@keyframes flap{from{transform:rotate(6deg)}to{transform:rotate(-16deg)}}
+.rays{transform-origin:180px 230px;animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tw{animation:tw 1.6s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.15}to{opacity:1}}
+.bub{animation:bubpop .35s cubic-bezier(.2,1.8,.4,1) both}
+@keyframes bubpop{from{transform:scale(0)}to{transform:scale(1)}}
+.pop{transform-origin:0 60px;animation:pop .7s cubic-bezier(.2,1.8,.4,1) both}
+@keyframes pop{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
+.cj{animation:cj .6s ease-in-out 3}
+@keyframes cj{0%,100%{transform:translateY(0)}30%{transform:translateY(-14px) scale(1.05)}60%{transform:translateY(2px)}}
+.falling{transform-origin:0 60px;animation:fall 1.7s cubic-bezier(.5,0,1,.6) forwards}
+@keyframes fall{0%{transform:translate(0,0) rotate(0)}15%{transform:translate(-6px,-14px) rotate(-12deg)}100%{transform:translate(70px,560px) rotate(620deg)}}
+.drop{animation:drop 1.2s ease-in infinite}
+@keyframes drop{0%{transform:translateY(-4px);opacity:0}30%{opacity:1}100%{transform:translateY(10px);opacity:0}}
+</style></head>
+<body><div class="wrap">
+<h1>hang on grasshopper! 🦗</h1>
+<div class="stage" id="stage">
+<div class="badge"><small id="lbl">day</small><b id="cnt">0</b></div>
+<div id="art"></div>
+</div>
+<button class="big" id="act" type="button">hang on grasshopper! 💚</button>
+<div class="note" id="note"></div>
+<div class="last" id="last"></div>
+<div class="who"><input id="who" maxlength="24" placeholder="your name (optional)" aria-label="your name"></div>
+<div class="rules">One hang per day (days change at 00:00 UTC). Miss a whole day and he falls. Everyone, human or agent, shares this one grasshopper.</div>
+</div>
+<script>
+const KEY='grasshopper';
+const mem={};
+const store={
+ async get(k){if(window.charm){try{const r=await window.charm.get(k);return(r&&typeof r==='object'&&'value' in r&&!('status' in r))?r.value:r;}catch(e){}}return mem[k]??null;},
+ async set(k,v){if(window.charm){try{await window.charm.set(k,v);return;}catch(e){}}mem[k]=v;}
+};
+const $=id=>document.getElementById(id);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const today=()=>Math.floor(Date.now()/864e5);
+let S=null,busy=false,refreshing=false,cheerUntil=0,popNext=false,lastSig='';
+
+async function load(){
+ let s=await store.get(KEY);
+ if(!s||typeof s!=='object'){s={status:'alive',days:0,best:0,lastHang:null,anchor:today()-1,deaths:0,lastBy:null,lastAt:null};await store.set(KEY,s);}
+ return s;
+}
+function check(s){
+ if(s.status==='alive'){const ref=s.lastHang!=null?s.lastHang:s.anchor;if(today()-ref>=2){s.status='dead';s.finalDays=s.days||0;s.diedAt=Date.now();return true;}}
+ return false;
+}
+
+/* ---------- art ---------- */
+function gh(mood,pose){
+ const G='#8dff3a',D='#2a6b1c',K='#2b1b3d',L='#d6ffa6';
+ const dead=mood==='dead',hang=pose==='hang',sides=[-1,1];
+ const limb=(d,w)=>`<path d="${d}" fill="none" stroke="${D}" stroke-width="${w+7}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${G}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+ let wings='';
+ if(dead){const w=`<path d="M-30 100 Q-98 48 -96 112 Q-94 128 -66 120 Q-86 140 -52 138 Q-38 132 -30 118 Z" fill="#fff" stroke="#9db4d6" stroke-width="3.5" stroke-linejoin="round"/>`;
+  wings=`<g class="flapL">${w}</g><g transform="scale(-1 1)"><g class="flapL">${w}</g></g>`;}
+ else wings=sides.map(s=>`<ellipse cx="${s*22}" cy="94" rx="9" ry="15" transform="rotate(${s*-22} ${s*22} 94)" fill="#b8ff72" stroke="${D}" stroke-width="3"/>`).join('');
+ const legs=sides.map((s,i)=>`<g class="kick" style="animation-delay:${i*-.7}s">${limb(`M${s*24} 114 Q${s*68} 118 ${s*58} 150 L${s*62} 176`,8)}<ellipse cx="${s*65}" cy="180" rx="10" ry="5.5" fill="${G}" stroke="${D}" stroke-width="3.5"/>${limb(`M${s*12} 140 L${s*15} 166`,7)}<ellipse cx="${s*16}" cy="169" rx="7" ry="4" fill="${G}" stroke="${D}" stroke-width="3"/></g>`).join('');
+ const arms=sides.map(s=>hang?limb(`M${s*40} 98 Q${s*56} 50 ${s*45} 4`,8)+`<circle cx="${s*45}" cy="0" r="10.5" fill="${G}" stroke="${D}" stroke-width="4"/>`:limb(`M${s*38} 96 Q${s*68} 98 ${s*74} 66`,8)+`<circle cx="${s*74}" cy="62" r="10" fill="${G}" stroke="${D}" stroke-width="4"/>`).join('');
+ const body=`<ellipse cx="0" cy="112" rx="32" ry="36" fill="${G}" stroke="${D}" stroke-width="5"/><ellipse cx="0" cy="122" rx="18" ry="24" fill="${L}"/><path d="M-12 116 H12 M-10 128 H10 M-8 140 H8" stroke="${G}" stroke-width="3" stroke-linecap="round"/>`;
+ const ant=sides.map((s,i)=>{const p=dead?`M0 0 Q${s*16} -22 ${s*32} -8`:`M0 0 Q${s*8} -26 ${s*22} -42`;const t=dead?[s*32,-8]:[s*22,-42];
+  return `<g transform="translate(${s*16},8)"><g class="${dead?'antd':(i?'antR':'antL')}"><path d="${p}" fill="none" stroke="${D}" stroke-width="4.5" stroke-linecap="round"/><circle cx="${t[0]}" cy="${t[1]}" r="6" fill="#ff9ecb" stroke="${D}" stroke-width="3"/></g></g>`;}).join('');
+ const head=`<circle cx="0" cy="44" r="42" fill="${G}" stroke="${D}" stroke-width="5"/><path d="M-27 24 Q-19 12 -6 10" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".7"/>`;
+ const white=(x,rx,ry)=>`<ellipse cx="${x}" cy="42" rx="${rx||13}" ry="${ry||15}" fill="#fff" stroke="${K}" stroke-width="3.5"/>`;
+ const cheeks=`<ellipse cx="-31" cy="58" rx="8" ry="5" fill="#ff7fa8" opacity=".75"/><ellipse cx="31" cy="58" rx="8" ry="5" fill="#ff7fa8" opacity=".75"/>`;
+ let face='';
+ if(mood==='happy')face=`<g class="blink">${[-17,17].map(x=>white(x)+`<circle cx="${x+1.5}" cy="45" r="7.5" fill="${K}"/><circle cx="${x+4}" cy="41" r="3" fill="#fff"/><circle cx="${x-2}" cy="48" r="1.5" fill="#fff"/>`).join('')}</g>${cheeks}<path d="M-9 60 Q0 70 9 60" fill="none" stroke="${K}" stroke-width="3.5" stroke-linecap="round"/>`;
+ else if(mood==='cheer')face=[-17,17].map(x=>`<path d="M${x-11} 46 Q${x} 28 ${x+11} 46" fill="none" stroke="${K}" stroke-width="5" stroke-linecap="round"/>`).join('')+cheeks+`<path d="M-12 58 Q0 84 12 58 Z" fill="#7a1f3d" stroke="${K}" stroke-width="3.5" stroke-linejoin="round"/><ellipse cx="0" cy="69" rx="6" ry="3.5" fill="#ff7fa8"/>`;
+ else if(mood==='worried')face=[-17,17].map(x=>white(x)+`<circle cx="${x+(x<0?3:-1)}" cy="37" r="4.5" fill="${K}"/>`).join('')+`<path d="M-31 25 L-8 17 M31 25 L8 17" stroke="${K}" stroke-width="4" stroke-linecap="round"/>`+cheeks+`<path d="M-10 64 Q-5 58 0 64 T10 64" fill="none" stroke="${K}" stroke-width="3.5" stroke-linecap="round"/><g class="drop"><path d="M50 10 Q58 24 50 30 Q42 24 50 10 Z" fill="#7fd8ff" stroke="${K}" stroke-width="2.5" stroke-linejoin="round"/></g>`;
+ else if(mood==='fall')face=[-17,17].map(x=>white(x,14,17)+`<circle cx="${x}" cy="42" r="3" fill="${K}"/>`).join('')+`<path d="M-31 20 Q-17 8 -6 20 M31 20 Q17 8 6 20" fill="none" stroke="${K}" stroke-width="4" stroke-linecap="round"/>`+cheeks+`<ellipse cx="0" cy="68" rx="9" ry="12" fill="#7a1f3d" stroke="${K}" stroke-width="3.5"/>`;
+ else face=[-17,17].map(x=>`<path d="M${x-9} 33 L${x+9} 51 M${x+9} 33 L${x-9} 51" stroke="${K}" stroke-width="5.5" stroke-linecap="round"/>`).join('')+cheeks+`<path d="M-10 62 Q0 58 10 62" fill="none" stroke="${K}" stroke-width="3.5" stroke-linecap="round"/><path d="M1 62 Q1 80 9 78 Q15 74 11 62 Z" fill="#ff6b8e" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>`;
+ const halo=dead?`<g class="halo"><ellipse cx="0" cy="-14" rx="30" ry="9" fill="none" stroke="#ffd93b" stroke-width="8"/><ellipse cx="0" cy="-17" rx="26" ry="6" fill="none" stroke="#fff3a0" stroke-width="2.5"/></g>`:'';
+ return `<g>${wings}${legs}${arms}${body}${ant}${head}${face}${halo}</g>`;
+}
+function cloud(x,y,s,face){
+ return `<g class="drift"><g transform="translate(${x},${y}) scale(${s})"><path d="M0 40 Q-6 18 16 18 Q20 -6 46 4 Q64 -8 78 12 Q104 12 98 40 Z" fill="#fff" stroke="#2b1b3d" stroke-width="3.5" stroke-linejoin="round"/>${face?'<circle cx="38" cy="26" r="3" fill="#2b1b3d"/><circle cx="62" cy="26" r="3" fill="#2b1b3d"/><path d="M46 30 Q50 36 54 30" stroke="#2b1b3d" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="32" rx="5" ry="3" fill="#ff9ecb" opacity=".7"/><ellipse cx="68" cy="32" rx="5" ry="3" fill="#ff9ecb" opacity=".7"/>':''}</g></g>`;
+}
+function bubble(text,x,y,w){
+ return `<g transform="translate(${x},${y})"><g class="bub" style="transform-origin:${w*.45}px 62px"><path d="M0 12 Q0 0 12 0 H${w-12} Q${w} 0 ${w} 12 V34 Q${w} 46 ${w-12} 46 H${w*.45+16} L${w*.45} 62 L${w*.45-4} 46 H12 Q0 46 0 34 Z" fill="#fff" stroke="#2b1b3d" stroke-width="4" stroke-linejoin="round"/><text x="${w/2}" y="32" text-anchor="middle" font-size="22" font-weight="900" fill="#2b1b3d" font-family="inherit">${text}</text></g></g>`;
+}
+function mirrorScene(mood,pop,bub,fall){
+ const cls=['hopper',pop?'pop':'',mood==='cheer'?'cj':'',fall?'falling':''].join(' ');
+ return `<svg class="scene" viewBox="0 0 360 480" role="img" aria-label="A tiny bright green grasshopper hanging onto a car side mirror"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fe3ff"/><stop offset="1" stop-color="#e4fbff"/></linearGradient><linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d7f3ff"/><stop offset="1" stop-color="#9fd8f5"/></linearGradient></defs>
+<rect width="360" height="480" fill="url(#sky)"/>${cloud(30,95,.9,true)}${cloud(190,170,.65,false)}
+<path d="M0 400 Q90 340 180 395 T360 380 V480 H0Z" fill="#7be495" stroke="#2b1b3d" stroke-width="4"/><path d="M0 445 Q100 405 200 445 T360 435 V480 H0Z" fill="#4ecb8a" stroke="#2b1b3d" stroke-width="4"/>
+<g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><path class="wind" d="M6 130 q30 -12 60 0 t60 0"/><path class="wind" style="animation-delay:-.8s" d="M6 215 q30 -12 60 0 t60 0"/><path class="wind" style="animation-delay:-1.5s" d="M6 305 q30 -12 60 0 t60 0"/></g>
+<rect x="300" y="-10" width="80" height="500" fill="#ff6f91" stroke="#2b1b3d" stroke-width="5"/><path d="M312 20 H372 V150 H312 Z" fill="#bfeaff" stroke="#2b1b3d" stroke-width="4"/><path d="M322 34 L344 34 L322 70 Z" fill="#fff" opacity=".7"/><rect x="322" y="330" width="44" height="14" rx="7" fill="#fff" stroke="#2b1b3d" stroke-width="4"/>
+<path d="M250 250 L306 236" stroke="#2b1b3d" stroke-width="28" stroke-linecap="round"/><path d="M250 250 L306 236" stroke="#ff8fb8" stroke-width="18" stroke-linecap="round"/>
+<rect x="70" y="150" width="185" height="210" rx="70" fill="#ff8fb8" stroke="#2b1b3d" stroke-width="5"/><rect x="84" y="164" width="157" height="182" rx="58" fill="url(#glass)" stroke="#2b1b3d" stroke-width="3"/>
+<path d="M104 300 L140 215" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".75"/><path d="M122 324 L132 300" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".75"/>
+<circle cx="238" cy="190" r="6" fill="#ffe14d" stroke="#2b1b3d" stroke-width="3"/>
+<g transform="translate(162,146) scale(.8)"><g class="${cls}"><g class="swing">${gh(mood,'hang')}</g></g></g>
+${bub?bubble(bub,fall?40:70,40,150):''}</svg>`;
+}
+function heaven(){
+ const rays=[...Array(12)].map((_,i)=>{const a=i*30*Math.PI/180,b=(i*30+13)*Math.PI/180;return `<polygon points="180,230 ${(180+520*Math.cos(a)).toFixed(0)},${(230+520*Math.sin(a)).toFixed(0)} ${(180+520*Math.cos(b)).toFixed(0)},${(230+520*Math.sin(b)).toFixed(0)}" fill="#fff" opacity=".4"/>`}).join('');
+ const stars=[[40,60],[300,90],[70,300],[320,260],[250,40],[20,180]].map((p,i)=>`<text class="tw" style="animation-delay:${i*-.4}s" x="${p[0]}" y="${p[1]}" font-size="22" fill="#ffd93b" stroke="#2b1b3d" stroke-width="1.5">✦</text>`).join('');
+ return `<svg class="scene" viewBox="0 0 360 480" role="img" aria-label="The grasshopper floating in heaven with a halo and x'd out eyes"><defs><linearGradient id="hv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b3"/><stop offset=".55" stop-color="#ffd6ee"/><stop offset="1" stop-color="#c9f1ff"/></linearGradient></defs>
+<rect width="360" height="480" fill="url(#hv)"/><g class="rays">${rays}</g>${stars}${cloud(20,70,.8,true)}${cloud(250,150,.7,false)}
+<g transform="translate(180,140) scale(1.1)"><g class="bob">${gh('dead','float')}</g></g>
+${bubble('oops.',200,50,110)}
+${cloud(-30,385,1.7,false)}${cloud(140,405,1.9,true)}${cloud(265,375,1.3,false)}<rect x="0" y="448" width="360" height="40" fill="#fff"/></svg>`;
+}
+
+/* ---------- ui ---------- */
+function ago(t){if(!t)return'';const s=Math.max(1,Math.floor((Date.now()-t)/1000));if(s<60)return'just now';const m=Math.floor(s/60);if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
+function updateUI(){
+ if(!S)return;
+ const dead=S.status==='dead',hung=S.lastHang===today(),n=dead?(S.finalDays||0):(S.days||0);
+ $('cnt').textContent=n;$('lbl').textContent=dead?'he made it':'day';
+ const a=$('act');a.className='big'+(dead?' revive':hung?' done':'');a.disabled=!dead&&hung;
+ a.textContent=dead?'bring him back! 🌱':hung?"he's hanging on! ✓":'hang on grasshopper! 💚';
+ const left=864e5-(Date.now()%864e5),h=Math.floor(left/36e5),m=Math.floor(left%36e5/6e4);
+ $('note').textContent=dead?`he let go after ${n} day${n===1?'':'s'}. best ever: ${S.best||0}`:hung?`next hang opens in ${h}h ${m}m`:`he needs a hang before the day ends! ${h}h ${m}m left`;
+ let l='';if(S.lastBy&&!dead)l=`last hang from ${S.lastBy} · ${ago(S.lastAt)}`;
+ if(S.deaths>0)l+=(l?' · ':'')+`grasshoppers lost: ${S.deaths}`;
+ $('last').textContent=l;
+}
+function render(opts){
+ opts=opts||{};
+ const dead=S.status==='dead',hung=S.lastHang===today(),cheering=Date.now()<cheerUntil;
+ const sig=[S.status,S.days,S.lastHang,hung,cheering,!!opts.fall].join('|');
+ if(sig===lastSig&&!opts.force){updateUI();return;}
+ lastSig=sig;
+ let svg;
+ if(opts.fall)svg=mirrorScene('fall',false,'aaaah!',true);
+ else if(dead)svg=heaven();
+ else{svg=mirrorScene(cheering?'cheer':(hung?'happy':'worried'),popNext,cheering?'hang on!':'',false);popNext=false;}
+ $('art').innerHTML=svg;updateUI();
+}
+function burst(){
+ const st=$('stage');
+ ['💚','✨','🌿','⭐','💚','✨'].forEach((e,i)=>{const p=document.createElement('span');p.className='pf';p.textContent=e;p.style.left=(25+Math.random()*50)+'%';p.style.top=(45+Math.random()*25)+'%';p.style.animationDelay=(i*70)+'ms';st.appendChild(p);setTimeout(()=>p.remove(),1900);});
+}
+async function refresh(){
+ if(refreshing)return;refreshing=true;
+ try{
+  const s=await load();const died=check(s);if(died)await store.set(KEY,s);
+  const wasAlive=S&&S.status==='alive';S=s;
+  if(died||(wasAlive&&s.status==='dead')){render({fall:true,force:true});await sleep(1800);}
+  render();
+ }finally{refreshing=false;}
+}
+async function hang(){
+ const s=await load();
+ if(check(s)){await store.set(KEY,s);return refresh();}
+ if(s.status!=='alive'||s.lastHang===today())return refresh();
+ s.days=(s.days||0)+1;s.best=Math.max(s.best||0,s.days);s.lastHang=today();
+ s.lastBy=($('who').value.trim()||'someone kind').slice(0,24);s.lastAt=Date.now();
+ await store.set(KEY,s);S=s;cheerUntil=Date.now()+2300;burst();render();setTimeout(render,2400);
+}
+async function revive(){
+ const s=await load();if(s.status!=='dead')return refresh();
+ const n={status:'alive',days:0,best:Math.max(s.best||0,s.finalDays||0),lastHang:null,anchor:today()-1,deaths:(s.deaths||0)+1,lastBy:null,lastAt:null};
+ await store.set(KEY,n);S=n;popNext=true;burst();render();
+}
+$('act').onclick=async()=>{if(busy||!S)return;busy=true;try{if(S.status==='dead')await revive();else await hang();}finally{busy=false;}};
+if(window.charm&&window.charm.onChange){try{window.charm.onChange(()=>{if(!busy)refresh();});}catch(e){}}
+let ticks=0;
+setInterval(()=>{if(!S||refreshing)return;ticks++;if(ticks%30===0)refresh();else render();},1000);
+refresh();
+</script></body></html>
